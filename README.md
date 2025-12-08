@@ -58,3 +58,6 @@ python src/main.py --ticker SPY --window 500 --confidence 0.95
 - Liu, F., Ting, K., & Zhou, Z. (2008). "Isolation Forest". IEEE ICDM, pp. 413–422.
 - Bishop, C. (2006). *Pattern Recognition and Machine Learning*. Springer.
 
+---
+
+*Billy Hou | University of Bristol | 2025*
