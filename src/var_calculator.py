@@ -23,12 +23,13 @@ def expected_shortfall(returns, window=252, alpha=0.05):
     return returns.rolling(window).apply(es, raw=True)
 
 def regime_aware_var(returns, regimes, alpha=0.05, min_obs=30):
-    # parametric VaR fitted per regime (uses past regime-conditioned mu/sigma)
+    # parametric VaR per regime; day t uses the regime known at t-1 and returns up to t-1
     out = pd.Series(index=returns.index, dtype=float)
     z = stats.norm.ppf(alpha)
+    prev = regimes.shift(1)
     for t in range(min_obs, len(returns)):
-        r_past, g_past = returns.iloc[:t], regimes.iloc[:t]
-        cur = regimes.iloc[t]
+        r_past, g_past = returns.iloc[:t], prev.iloc[:t]
+        cur = prev.iloc[t]
         sub = r_past[g_past == cur]
         if len(sub) < min_obs:
             sub = r_past
@@ -36,12 +37,13 @@ def regime_aware_var(returns, regimes, alpha=0.05, min_obs=30):
     return out
 
 def calculate_all_var(returns, window=252, alpha=0.05):
+    # shift by one day so the VaR for day t only uses returns up to t-1
     return pd.DataFrame({
         'returns': returns,
-        'hist_var': historical_var(returns, window, alpha),
-        'param_var': parametric_var(returns, window, alpha),
-        'ewma_var': ewma_var(returns, alpha=alpha),
-        'es': expected_shortfall(returns, window, alpha),
+        'hist_var': historical_var(returns, window, alpha).shift(1),
+        'param_var': parametric_var(returns, window, alpha).shift(1),
+        'ewma_var': ewma_var(returns, alpha=alpha).shift(1),
+        'es': expected_shortfall(returns, window, alpha).shift(1),
     }).dropna()
 
 if __name__ == "__main__":

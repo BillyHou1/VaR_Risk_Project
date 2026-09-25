@@ -35,7 +35,7 @@ def calculate_features(df, window=20):
     f['downside_vol'] = df['returns'].rolling(window).apply(downside_std, raw=False)
     f['skew'] = df['returns'].rolling(window).skew()
     f['kurt'] = df['returns'].rolling(window).kurt()
-    # don't drop on missing volume — only require core return-derived features
+    # volume may be missing; only the return-based features are required
     core = ['returns', 'volatility', 'downside_vol', 'skew', 'kurt']
     return f.dropna(subset=core)
 

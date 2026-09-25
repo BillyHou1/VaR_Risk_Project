@@ -27,10 +27,13 @@ def assign_state_names(Xs, labels, n_states):
                   [f'S{i}' for i in range(n_states)])
     return {s: bank[i] for i, s in enumerate(order)}
 
-def predict_risk_states(features, n_states=3):
+def predict_risk_states(features, n_states=3, fit_end=None):
     valid_idx = features[GMM_FEATS].dropna().index
-    gmm, scaler, labels, Xs = fit_gmm(features.loc[valid_idx], n_states)
-    names = assign_state_names(Xs, labels, n_states)
+    fit_idx = valid_idx[valid_idx < pd.Timestamp(fit_end)] if fit_end else valid_idx
+    gmm, scaler, fit_labels, fit_Xs = fit_gmm(features.loc[fit_idx], n_states)
+    names = assign_state_names(fit_Xs, fit_labels, n_states)
+    Xs = scaler.transform(features.loc[valid_idx, GMM_FEATS].values)
+    labels = gmm.predict(Xs)
     df = pd.DataFrame(index=valid_idx)
     df['risk_state'] = labels
     df['state_name'] = [names[s] for s in labels]

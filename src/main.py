@@ -47,7 +47,7 @@ def main():
     var_df.to_csv(os.path.join(args.out_dir, 'var_results.csv'))
 
     gmm_path = os.path.join('models', 'gmm_bundle.pkl')
-    states, bundle = fit_and_save_gmm(feats, n_states=args.n_states, save_path=gmm_path)
+    states, bundle = fit_and_save_gmm(feats, n_states=args.n_states, save_path=gmm_path, fit_end=args.test_start)
     gmm, scaler, names = bundle['gmm'], bundle['scaler'], bundle['names']
     states.to_csv(os.path.join(args.out_dir, 'risk_states.csv'))
 

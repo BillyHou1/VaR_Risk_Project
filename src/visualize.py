@@ -24,7 +24,7 @@ def plot_violations(returns, var, out_path, label='Historical'):
     ax.plot(idx, r, color='black', lw=0.5, alpha=0.6, label='returns')
     ax.plot(idx, v, color='#E64A19', lw=1.0, label=f'{label} VaR')
     ax.scatter(idx[viol], r[viol], color='red', s=14, zorder=3, label=f'violations (n={int(viol.sum())})')
-    ax.set_title(f'{label} VaR — violations'); ax.legend(fontsize=9)
+    ax.set_title(f'{label} VaR violations'); ax.legend(fontsize=9)
     fig.tight_layout(); fig.savefig(out_path, dpi=140); plt.close(fig)
     print(f"Saved: {out_path}")
 

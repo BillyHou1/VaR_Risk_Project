@@ -8,8 +8,8 @@ from data_loader import calculate_features
 
 DEFAULT_GMM_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'models', 'gmm_bundle.pkl')
 
-def fit_and_save_gmm(features, n_states=3, save_path=DEFAULT_GMM_PATH):
-    states_df, gmm, scaler, names = predict_risk_states(features, n_states=n_states)
+def fit_and_save_gmm(features, n_states=3, save_path=DEFAULT_GMM_PATH, fit_end=None):
+    states_df, gmm, scaler, names = predict_risk_states(features, n_states=n_states, fit_end=fit_end)
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     bundle = {'gmm': gmm, 'scaler': scaler, 'names': names,
               'features': GMM_FEATS, 'n_states': n_states}
